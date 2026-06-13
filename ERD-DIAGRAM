@@ -1,0 +1,70 @@
+Table USER {
+  user_id int [pk, increment]
+  name varchar
+  email varchar [unique]
+  phone varchar
+  address text
+  created_at datetime
+  updated_at datetime
+}
+
+Table CATEGORY {
+  category_id int [pk, increment]
+  category_name varchar
+  category_type varchar
+  description text
+  created_at datetime
+}
+
+Table PRODUCT {
+  product_id int [pk, increment]
+  category_id int [ref: > CATEGORY.category_id]
+  product_name varchar
+  description text
+  price decimal
+  stock_quantity int
+  image_url varchar
+  created_at datetime
+  updated_at datetime
+}
+
+Table CART {
+  cart_id int [pk, increment]
+  user_id int [ref: > USER.user_id, unique]
+  created_at datetime
+}
+
+Table CART_ITEM {
+  cart_item_id int [pk, increment]
+  cart_id int [ref: > CART.cart_id]
+  product_id int [ref: > PRODUCT.product_id]
+  quantity int
+  created_at datetime
+}
+
+Table ORDERS {
+  order_id int [pk, increment]
+  user_id int [ref: > USER.user_id]
+  total_amount decimal
+  order_status varchar
+  created_at datetime
+}
+
+Table ORDER_ITEM {
+  order_item_id int [pk, increment]
+  order_id int [ref: > ORDERS.order_id]
+  product_id int [ref: > PRODUCT.product_id]
+  quantity int
+  price decimal
+}
+
+Table PAYMENT {
+  payment_id int [pk, increment]
+  user_id int [ref: > USER.user_id, unique]
+  order_id int [ref: > ORDERS.order_id, unique]
+  payment_method varchar
+  payment_status varchar
+  payment_date datetime
+}
+
+Ref: "USER"."user_id" < "PAYMENT"."payment_id"
